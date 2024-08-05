@@ -42,3 +42,26 @@ export const saveToken = async (userId: number, refreshToken: string) => {
 
   return refreshToken;
 };
+
+export const removeToken = async (refreshToken: string) => {
+  
+  const existingToken = await prisma.token.findUnique({
+    where: { userId: userId },
+  });
+
+  if (existingToken) {
+    await prisma.token.update({
+      where: { userId: userId },
+      data: { refreshToken: refreshToken },
+    });
+  } else {
+    await prisma.token.create({
+      data: {
+        userId: userId,
+        refreshToken: refreshToken,
+      },
+    });
+  }
+
+  return refreshToken;
+};
